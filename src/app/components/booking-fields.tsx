@@ -146,7 +146,7 @@ export function GuestsField({
           />
         </button>
       </PopoverTrigger>
-      <PopoverContent className="w-72 p-4" align="start">
+      <PopoverContent className="w-full p-4" align="start">
         <Stepper
           label="Adults"
           sublabel="Ages 13+"

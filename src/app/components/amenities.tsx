@@ -1,30 +1,120 @@
-import { Waves, UtensilsCrossed, Sparkles, Wine, Sailboat, Dumbbell } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import {
+  Waves,
+  UtensilsCrossed,
+  Sparkles,
+  Wine,
+  Sailboat,
+  Dumbbell,
+} from "lucide-react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  type CarouselApi,
+} from "./ui/carousel";
+import { ButtonNavigationSlider } from "./button-navigation-slider";
 
 const items = [
-  { icon: Waves, title: "Two Infinity Pools", desc: "Heated, sea-facing, open year round." },
-  { icon: UtensilsCrossed, title: "Three Restaurants", desc: "Including a Michelin-starred terrace." },
-  { icon: Sparkles, title: "Cliffside Spa", desc: "Holistic treatments and a hammam." },
-  { icon: Wine, title: "Wine Cellar", desc: "Tastings of regional Campanian vintages." },
-  { icon: Sailboat, title: "Private Yacht", desc: "Half-day excursions along the coast." },
-  { icon: Dumbbell, title: "Wellness Studio", desc: "Daily yoga, pilates, and trainers." },
+  {
+    icon: Waves,
+    title: "Sky Infinity Pool",
+    desc: "Experience the sensation of swimming in our 25-meter heated pool that appears to float directly into the rugged Dolomite peaks.",
+  },
+  {
+    icon: UtensilsCrossed,
+    title: "Forest-to-Table Dining",
+    desc: "Indulge in 5-course gourmet dinners featuring organic ingredients sourced daily from our own gardens and local Alpine farmers",
+  },
+  {
+    icon: Sparkles,
+    title: "Vitalis Panoramic Spa",
+    desc: "Recharge in our panoramic saunas and enjoy authentic herbal treatments inspired by ancient Alpine healing traditions.",
+  },
+  {
+    icon: Wine,
+    title: "Ski-In / Ski-Out Access",
+    desc: "Enjoy seamless access to the Dolomiti Superski slopes directly from the hotel's ski room—no shuttles, no waiting.",
+  },
+  {
+    icon: Sailboat,
+    title: "E-Bike & Hiking Hub",
+    desc: "Explore the mountains with ease using our premium fleet of e-bikes and professional hiking gear available exclusively for guests.",
+  },
+  {
+    icon: Dumbbell,
+    title: "Mindful Yoga Studio",
+    desc: "Find your inner peace in our glass-walled studio overlooking the pine forest, offering daily guided meditation and yoga sessions.",
+  },
 ];
 
-export function Amenities() {
+function AmenitiesCard({
+  icon,
+  title,
+  description,
+}: {
+  icon: any;
+  title: string;
+  description: string;
+}) {
   return (
-    <section id="amenities" className="mx-auto max-w-6xl px-6 py-24">
-      <div className="mb-12 text-center">
-        <div className="mb-3 tracking-widest uppercase text-muted-foreground">Amenities</div>
-        <h2 style={{ fontSize: "clamp(1.75rem, 3vw, 2.5rem)" }}>Everything you'd hope for, and more.</h2>
+    <div className="bg-brand-surface rounded-xl p-4 flex-1">
+      <div className="size-14 bg-white rounded-lg flex items-center justify-center"></div>
+      <div className="mt-6">
+        <h4>{title}</h4>
+        <p>{description}</p>
       </div>
-      <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
-        {items.map((it) => (
-          <div key={it.title} className="space-y-2">
-            <it.icon className="h-7 w-7" />
-            <h3>{it.title}</h3>
-            <p className="text-muted-foreground">{it.desc}</p>
-          </div>
-        ))}
+    </div>
+  );
+}
+
+export function Amenities() {
+  const [api, setApi] = useState<CarouselApi>();
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+
+  const onSelect = useCallback(() => {
+    if (!api) return;
+    setCanScrollPrev(api.canScrollPrev());
+    setCanScrollNext(api.canScrollNext());
+  }, [api]);
+
+  useEffect(() => {
+    if (!api) return;
+    onSelect();
+    api.on("select", onSelect);
+    api.on("reInit", onSelect);
+    return () => {
+      api.off("select", onSelect);
+      api.off("reInit", onSelect);
+    };
+  }, [api, onSelect]);
+
+  return (
+    <section id="amenities" className="py-20">
+      <div className="mx-auto container px-4 flex flex-col items-center text-center">
+        <h3>- Amenities -</h3>
+        <h2 className="mt-3">Everything you'd hope for, and more.</h2>
       </div>
+      <Carousel className="mt-10" setApi={setApi}>
+        <CarouselContent className="-ml-4">
+          {items.map((it) => (
+            <CarouselItem key={it.title} className="pl-8 pr-4 flex flex-col">
+              <AmenitiesCard
+                title={it.title}
+                description={it.desc}
+                icon={it.icon}
+              />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
+      <ButtonNavigationSlider
+        scrollPrev={() => api?.scrollPrev()}
+        scrollNext={() => api?.scrollNext()}
+        canScrollPrev={canScrollPrev}
+        canScrollNext={canScrollNext}
+      />
     </section>
   );
 }

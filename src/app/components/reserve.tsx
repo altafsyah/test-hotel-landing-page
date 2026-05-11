@@ -16,10 +16,15 @@ import { User, Mail, Phone, BedDouble } from "lucide-react";
 import { DateRangeField, GuestsField, type Guests } from "./booking-fields";
 import type { DateRange } from "react-day-picker";
 
-const extras = ["Airport transfer", "Spa package", "Private dining", "Yacht excursion"];
+const extras = [
+  "Airport transfer",
+  "Spa package",
+  "Private dining",
+  "Yacht excursion",
+];
 
 const fieldClass =
-  "h-12 rounded-full border-border bg-muted/30 pl-11 pr-4 focus-visible:bg-background";
+  "h-14 rounded border-brand-text-primary/10 pl-11 pr-4 py-3 bg-white";
 
 function IconInput({
   icon,
@@ -48,37 +53,64 @@ export function Reserve() {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Request received — our concierge will be in touch within 24 hours.");
+    toast.success(
+      "Request received — our concierge will be in touch within 24 hours.",
+    );
   };
 
   return (
-    <section id="reserve" className="bg-muted/40 py-24">
-      <div className="mx-auto max-w-4xl px-6">
-        <div className="mb-10 text-center">
-          <div className="mb-3 tracking-widest uppercase text-muted-foreground">Reservations</div>
-          <h2 className="mb-3" style={{ fontSize: "clamp(1.75rem, 3vw, 2.5rem)" }}>
-            Plan your stay
-          </h2>
-          <p className="text-muted-foreground">
-            Tell us a little about your trip and our concierge will craft a tailored proposal.
+    <section id="reserve" className="py-20 px-4">
+      <div className="mx-auto container">
+        <div className="text-center flex flex-col items-center text-brand-white">
+          <h3>- Plan Your Stay -</h3>
+          <h2 className="mt-3">Request a Personal Quote</h2>
+          <p className="mt-6">
+            Fill out the form below, and our team will get back to you within 24
+            hours with a non-binding offer tailored to your needs.
           </p>
         </div>
 
-        <form onSubmit={onSubmit} className="space-y-8 rounded-3xl border bg-background p-8 shadow-sm md:p-10">
+        <form
+          onSubmit={onSubmit}
+          className="space-y-8 rounded-lg border bg-white p-3 mt-10 text-brand-text-primary"
+        >
           <div>
-            <div className="mb-4 tracking-widest uppercase text-muted-foreground" style={{ fontSize: 11 }}>
+            <div
+              className="mb-4 tracking-widest uppercase text-muted-foreground"
+              style={{ fontSize: 11 }}
+            >
               Your details
             </div>
             <div className="grid gap-4 md:grid-cols-2">
-              <IconInput icon={<User className="h-4 w-4" />} placeholder="First name" required />
-              <IconInput icon={<User className="h-4 w-4" />} placeholder="Last name" required />
-              <IconInput icon={<Mail className="h-4 w-4" />} type="email" placeholder="Email address" required />
-              <IconInput icon={<Phone className="h-4 w-4" />} type="tel" placeholder="Phone number" />
+              <IconInput
+                icon={<User className="size-5" />}
+                placeholder="First name"
+                required
+              />
+              <IconInput
+                icon={<User className="size-5" />}
+                placeholder="Last name"
+                required
+              />
+              <IconInput
+                icon={<Mail className="size-5" />}
+                type="email"
+                placeholder="Email address"
+                required
+              />
+              <IconInput
+                icon={<Phone className="size-5" />}
+                type="tel"
+                placeholder="Phone number"
+              />
             </div>
           </div>
 
           <div>
-            <div className="mb-4 tracking-widest uppercase text-muted-foreground" style={{ fontSize: 11 }}>
+            <div
+              className="mb-4 tracking-widest uppercase text-muted-foreground"
+              style={{ fontSize: 11 }}
+            >
               Stay
             </div>
             <div className="grid gap-3 md:grid-cols-2">
@@ -86,11 +118,16 @@ export function Reserve() {
               <GuestsField value={guests} onChange={setGuests} />
             </div>
             <div className="mt-3">
-              <Label htmlFor="rRoom" className="sr-only">Room type</Label>
+              <Label htmlFor="rRoom" className="sr-only">
+                Room type
+              </Label>
               <Select defaultValue="sea">
-                <SelectTrigger id="rRoom" className="h-12 w-full rounded-full px-4">
+                <SelectTrigger
+                  id="rRoom"
+                  className="h-12 w-full rounded px-4"
+                >
                   <span className="flex items-center gap-3">
-                    <BedDouble className="h-4 w-4 text-muted-foreground" />
+                    <BedDouble className="size-5 text-muted-foreground" />
                     <SelectValue />
                   </span>
                 </SelectTrigger>
@@ -104,7 +141,10 @@ export function Reserve() {
           </div>
 
           <div>
-            <div className="mb-4 tracking-widest uppercase text-muted-foreground" style={{ fontSize: 11 }}>
+            <div
+              className="mb-4 tracking-widest uppercase text-muted-foreground"
+              style={{ fontSize: 11 }}
+            >
               Optional add-ons
             </div>
             <div className="grid gap-2 sm:grid-cols-2">
@@ -113,11 +153,16 @@ export function Reserve() {
                 return (
                   <label
                     key={extra}
-                    className={`flex cursor-pointer items-center gap-3 rounded-full border px-4 py-3 transition-colors ${
-                      active ? "border-foreground bg-foreground/5" : "border-border hover:bg-muted/40"
+                    className={`flex cursor-pointer items-center gap-3 rounded border px-4 py-3 transition-colors ${
+                      active
+                        ? "border-foreground bg-foreground/5"
+                        : "border-border hover:bg-muted/40"
                     }`}
                   >
-                    <Checkbox checked={active} onCheckedChange={() => toggleExtra(extra)} />
+                    <Checkbox
+                      checked={active}
+                      onCheckedChange={() => toggleExtra(extra)}
+                    />
                     <span>{extra}</span>
                   </label>
                 );
@@ -126,7 +171,10 @@ export function Reserve() {
           </div>
 
           <div>
-            <div className="mb-4 tracking-widest uppercase text-muted-foreground" style={{ fontSize: 11 }}>
+            <div
+              className="mb-4 tracking-widest uppercase text-muted-foreground"
+              style={{ fontSize: 11 }}
+            >
               Special requests
             </div>
             <Textarea
@@ -136,7 +184,11 @@ export function Reserve() {
             />
           </div>
 
-          <Button type="submit" size="lg" className="w-full rounded-full md:w-auto md:px-10">
+          <Button
+            type="submit"
+            size="lg"
+            className="w-full rounded md:w-auto md:px-10"
+          >
             Submit request
           </Button>
         </form>

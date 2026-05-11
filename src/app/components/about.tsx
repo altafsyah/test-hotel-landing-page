@@ -1,28 +1,77 @@
+import { useCallback, useEffect, useState } from "react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import useEmblaCarousel from "embla-carousel-react";
+import { ButtonNavigationSlider } from "./button-navigation-slider";
+
+const slides = [
+  { src: "/images/hero-1.jpg", alt: "Azure Bay Resort" },
+  { src: "/images/hero-1.jpg", alt: "Azure Bay Resort" },
+  { src: "/images/hero-1.jpg", alt: "Azure Bay Resort" },
+];
 
 export function About() {
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    align: "center",
+    startIndex: 1,
+  });
+
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setCanScrollPrev(emblaApi.canScrollPrev());
+    setCanScrollNext(emblaApi.canScrollNext());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onSelect);
+    return () => {
+      emblaApi.off("select", onSelect);
+      emblaApi.off("reInit", onSelect);
+    };
+  }, [emblaApi, onSelect]);
+
   return (
-    <section className="mx-auto max-w-6xl px-6 py-24">
-      <div className="grid gap-12 md:grid-cols-2 md:items-center">
-        <div>
-          <div className="mb-3 tracking-widest uppercase text-muted-foreground">About the resort</div>
-          <h2 className="mb-6" style={{ fontSize: "clamp(1.75rem, 3vw, 2.5rem)" }}>
-            A timeless hideaway carved into the cliffs of Praiano.
-          </h2>
-          <p className="mb-4 text-muted-foreground">
-            Built around a 17th-century villa, Azure Bay blends old-world Mediterranean charm
-            with modern comfort. Twenty-eight suites, three restaurants, two infinity pools,
-            and a private cove — all yours to discover.
-          </p>
-          <p className="text-muted-foreground">
-            Our concierge curates everything from sailing day-trips along the coast to
-            private truffle dinners in our seaside grotto.
-          </p>
+    <section className="py-20" id="about">
+      <div className="px-4 container mx-auto text-center flex flex-col items-center text-[#323232]">
+        <h3>- Our Heritage -</h3>
+        <h2 className="mt-3">Nature, Design, and Soul</h2>
+        <p className="mt-6">
+          Born from a passion for architecture and deep respect for the Alpine
+          landscape, L'Aura is more than a hotel—it's a private retreat where
+          every window frames a masterpiece of nature.
+        </p>
+      </div>
+      <div className="mt-10">
+        <div className="overflow-hidden">
+          <div ref={emblaRef} className="overflow-visible">
+            <div className="flex">
+              {slides.map((slide, i) => (
+                <div key={i} className="flex-none basis-[85%] px-3">
+                  <div className="w-full aspect-square bg-slate-300 relative">
+                    <ImageWithFallback
+                      src={slide.src}
+                      alt={slide.alt}
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-        <ImageWithFallback
-          src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1200"
-          alt="Resort terrace"
-          className="h-[460px] w-full rounded-xl object-cover"
+        <ButtonNavigationSlider
+          scrollPrev={scrollPrev}
+          scrollNext={scrollNext}
+          canScrollPrev={canScrollPrev}
+          canScrollNext={canScrollNext}
         />
       </div>
     </section>

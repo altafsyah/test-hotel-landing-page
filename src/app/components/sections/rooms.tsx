@@ -267,8 +267,9 @@ function RoomDetail({ room }: { room: Room }) {
         <DrawerTrigger asChild>
           <RoomTriggerCard room={room} />
         </DrawerTrigger>
-        <DrawerContent className="flex flex-col h-full">
-          <div className="flex-1 overflow-y-auto min-h-0 container mx-auto px-4 pt-2" data-vaul-no-drag>
+        <DrawerContent className="flex flex-col max-h-none">
+          <div className="h-8 w-full shrink-0" />
+          <div className="flex-1 overflow-y-auto min-h-0 container mx-auto px-4" data-vaul-no-drag>
             <RoomGallery
               room={room}
               className="relative aspect-[4/3] w-full rounded-lg"

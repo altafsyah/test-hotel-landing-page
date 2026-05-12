@@ -1,18 +1,34 @@
 import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogTrigger,
-  DialogFooter,
-} from "./ui/dialog";
-import { Bed, Users, Maximize, Waves, Wifi, Coffee, Wind } from "lucide-react";
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+  DrawerFooter,
+  DrawerClose,
+} from "./ui/drawer";
+import {
+  Bed,
+  Users,
+  Maximize,
+  Waves,
+  Tag,
+  Bath,
+  Coffee,
+  Wind,
+  Flame,
+  TreePine,
+  Droplets,
+  User,
+  Check,
+  CheckCircle,
+  ArrowLeft,
+  ArrowRight,
+} from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -142,23 +158,7 @@ export function Rooms() {
           <CarouselContent className="-ml-4">
             {rooms.map((r) => (
               <CarouselItem key={r.name} className="pl-8 pr-4">
-                <Card className="overflow-hidden p-0">
-                  <ImageWithFallback
-                    src={r.img}
-                    alt={r.name}
-                    className="h-64 w-full object-cover"
-                  />
-                  <CardContent className="space-y-3 p-6">
-                    <div className="flex items-baseline justify-between">
-                      <h3>{r.name}</h3>
-                      <div className="text-muted-foreground">
-                        <span>{r.price}</span> / night
-                      </div>
-                    </div>
-                    <p className="text-muted-foreground">{r.desc}</p>
-                    <RoomDialog room={r} />
-                  </CardContent>
-                </Card>
+                <RoomDrawer room={r} />
               </CarouselItem>
             ))}
           </CarouselContent>
@@ -174,137 +174,194 @@ export function Rooms() {
   );
 }
 
-function RoomDialog({ room }: { room: Room }) {
+function featureIcon(feature: string) {
+  const f = feature.toLowerCase();
+  if (f.includes("tub") && !f.includes("bathroom"))
+    return <Bath className="size-5 shrink-0" />;
+  if (f.includes("bathroom")) return <Droplets className="size-5 shrink-0" />;
+  if (f.includes("pool")) return <Waves className="size-5 shrink-0" />;
+  if (f.includes("patio") || f.includes("balcony") || f.includes("terrace"))
+    return <TreePine className="size-5 shrink-0" />;
+  if (
+    f.includes("espresso") ||
+    f.includes("nespresso") ||
+    f.includes("coffee") ||
+    f.includes("bar")
+  )
+    return <Coffee className="size-5 shrink-0" />;
+  if (f.includes("air") || f.includes("condition"))
+    return <Wind className="size-5 shrink-0" />;
+  if (f.includes("daybed")) return <Bed className="size-5 shrink-0" />;
+  if (f.includes("shower")) return <Droplets className="size-5 shrink-0" />;
+  if (f.includes("butler") || f.includes("service"))
+    return <User className="size-5 shrink-0" />;
+  if (f.includes("fireplace") || f.includes("fire"))
+    return <Flame className="size-5 shrink-0" />;
+  return <Check className="size-5 shrink-0" />;
+}
+
+function RoomDrawer({ room }: { room: Room }) {
+  const [galleryApi, setGalleryApi] = useState<CarouselApi>();
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+
+  const onGallerySelect = useCallback(() => {
+    if (!galleryApi) return;
+    setCurrentSlide(galleryApi.selectedScrollSnap());
+    setCanScrollPrev(galleryApi.canScrollPrev());
+    setCanScrollNext(galleryApi.canScrollNext());
+  }, [galleryApi]);
+
+  useEffect(() => {
+    if (!galleryApi) return;
+    onGallerySelect();
+    galleryApi.on("select", onGallerySelect);
+    galleryApi.on("reInit", onGallerySelect);
+    return () => {
+      galleryApi.off("select", onGallerySelect);
+      galleryApi.off("reInit", onGallerySelect);
+    };
+  }, [galleryApi, onGallerySelect]);
+
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline" className="w-full rounded-full">
-          View details
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="max-h-[90vh] gap-0 overflow-y-auto p-0 sm:max-w-3xl">
-        <div className="relative">
+    <Drawer snapPoints={[0.85, 1]}>
+      <DrawerTrigger asChild>
+        <Card className="overflow-hidden p-0 cursor-pointer">
           <ImageWithFallback
-            src={room.gallery[0]}
+            src={room.img}
             alt={room.name}
-            className="h-72 w-full object-cover"
+            className="h-64 w-full object-cover"
           />
-          <Badge className="absolute left-4 top-4 rounded-full bg-background/90 text-foreground hover:bg-background">
-            {room.view}
-          </Badge>
-        </div>
-
-        <div className="grid grid-cols-3 gap-2 p-2">
-          {room.gallery.slice(1).map((src, i) => (
-            <ImageWithFallback
-              key={i}
-              src={src}
-              alt={`${room.name} view ${i + 2}`}
-              className="h-24 w-full rounded-md object-cover"
-            />
-          ))}
-        </div>
-
-        <div className="space-y-6 p-6 pt-2">
-          <DialogHeader className="space-y-1 text-left">
+          <CardContent className="space-y-3 p-6">
             <div className="flex items-baseline justify-between">
-              <DialogTitle>{room.name}</DialogTitle>
+              <h3>{room.name}</h3>
               <div className="text-muted-foreground">
                 <span>{room.price}</span> / night
               </div>
             </div>
-            <DialogDescription>{room.long}</DialogDescription>
-          </DialogHeader>
-
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-            <Stat
-              icon={<Maximize className="h-4 w-4" />}
-              label="Size"
-              value={room.size}
-            />
-            <Stat
-              icon={<Bed className="h-4 w-4" />}
-              label="Beds"
-              value={room.beds}
-            />
-            <Stat
-              icon={<Users className="h-4 w-4" />}
-              label="Sleeps"
-              value={room.capacity}
-            />
-            <Stat
-              icon={<Waves className="h-4 w-4" />}
-              label="View"
-              value={room.view}
-            />
-          </div>
-
-          <div>
-            <div
-              className="mb-3 tracking-widest uppercase text-muted-foreground"
-              style={{ fontSize: 11 }}
+            <p className="text-muted-foreground">{room.desc}</p>
+          </CardContent>
+        </Card>
+      </DrawerTrigger>
+      <DrawerContent className="flex flex-col data-[vaul-drawer-direction=bottom]:max-h-svh">
+        <div className="flex-1 overflow-y-auto min-h-0 container mx-auto px-4 pt-2">
+          <div className="relative aspect-[4/3] w-full rounded-lg overflow-hidden">
+            <Carousel
+              setApi={setGalleryApi}
+              opts={{ loop: true }}
+              className="h-full"
             >
-              Features
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {room.features.map((f) => (
-                <Badge
-                  key={f}
-                  variant="secondary"
-                  className="rounded-full px-3 py-1"
-                >
-                  {f}
-                </Badge>
+              <CarouselContent className="h-full ml-0">
+                {room.gallery.map((img, i) => (
+                  <CarouselItem key={i} className="pl-0">
+                    <ImageWithFallback
+                      src={img}
+                      alt={`${room.name} ${i + 1}`}
+                      className="aspect-[4/3] w-full object-cover"
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
+
+            <button
+              onClick={() => galleryApi?.scrollPrev()}
+              disabled={!canScrollPrev}
+              className="absolute top-1/2 -translate-y-1/2 left-3 size-9 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center disabled:opacity-30 transition-opacity"
+            >
+              <ArrowLeft className="size-4" />
+            </button>
+            <button
+              onClick={() => galleryApi?.scrollNext()}
+              disabled={!canScrollNext}
+              className="absolute top-1/2 -translate-y-1/2 right-3 size-9 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center disabled:opacity-30 transition-opacity"
+            >
+              <ArrowRight className="size-4" />
+            </button>
+
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+              {room.gallery.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => galleryApi?.scrollTo(i)}
+                  className={`h-1.5 rounded-full transition-all bg-white ${
+                    i === currentSlide ? "w-4 opacity-100" : "w-1.5 opacity-50"
+                  }`}
+                />
               ))}
             </div>
           </div>
 
-          <DialogFooter className="gap-2 sm:gap-2">
-            <Button
-              variant="outline"
-              className="rounded-full"
-              onClick={() => {
-                const close = document.activeElement as HTMLElement | null;
-                close?.blur();
-              }}
-            >
-              Close
-            </Button>
-            <Button
-              className="rounded-full"
-              onClick={() => {
-                document
-                  .getElementById("reserve")
-                  ?.scrollIntoView({ behavior: "smooth" });
-              }}
-            >
-              Reserve this suite
-            </Button>
-          </DialogFooter>
+          <div className="py-6 space-y-6 container mx-auto">
+            <DrawerHeader className="p-0">
+              <DrawerTitle>{room.name}</DrawerTitle>
+            </DrawerHeader>
+
+            <div className="border-t border-b border-brand-border pt-4">
+              <Stat icon={<Maximize className="size-5" />} value={room.size} />
+              <Stat icon={<Users className="size-5" />} value={room.capacity} />
+              <Stat icon={<Bed className="size-5" />} value={room.beds} />
+              <Stat
+                icon={<Tag className="size-5" />}
+                value={`${room.price} / night`}
+              />
+            </div>
+
+            <p className="text-muted-foreground">{room.long}</p>
+
+            <div>
+              <div className="mb-3 text-sm font-medium">Amenities:</div>
+              <div className="space-y-3">
+                {room.features.map((f) => (
+                  <div key={f} className="flex items-center gap-3">
+                    {featureIcon(f)}
+                    <span>{f}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <div className="mb-3 text-sm font-medium">Included services:</div>
+              <div className="space-y-3">
+                {room.features.map((f) => (
+                  <div key={f} className="flex items-center gap-2.5">
+                    <Check className="size-4 bg-brand-accent rounded-full text-white p-0.5" />
+                    <span>{f}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
-      </DialogContent>
-    </Dialog>
+
+        <DrawerFooter className="flex-row gap-3">
+          <DrawerClose asChild>
+            <button className="flex-1 rounded-lg ring ring-brand-text-primary/30 text-brand-text-primary py-3 2.5 h-12">
+              CLOSE
+            </button>
+          </DrawerClose>
+          <button
+            className="flex-1 rounded-lg bg-brand-accent text-white py-3 2.5 h-12"
+            onClick={() => {
+              document
+                .getElementById("reserve")
+                ?.scrollIntoView({ behavior: "smooth" });
+            }}
+          >
+            RESERVE THIS SUITE
+          </button>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
   );
 }
 
-function Stat({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-}) {
+function Stat({ icon, value }: { icon: React.ReactNode; value: string }) {
   return (
-    <div className="rounded-xl border bg-muted/30 p-3">
-      <div
-        className="mb-1 flex items-center gap-1.5 text-muted-foreground"
-        style={{ fontSize: 11 }}
-      >
-        {icon}
-        <span className="uppercase tracking-wider">{label}</span>
-      </div>
+    <div className="flex items-center gap-4 py-3">
+      {icon}
       <div>{value}</div>
     </div>
   );

@@ -4,9 +4,10 @@
 
 @theme {
   --color-brand-text-primary: #323232;
-  --color-brand-text-secondary: #524A46;
+  --color-brand-text-secondary: #524a46;
   --color-brand-white: #ffffff;
   --color-brand-accent: #a49781;
   --color-brand-accent-dark: #8a7d6b;
   --color-brand-surface: #f4f3f0;
+  --color-brand-border: #e4e8e8;
 }

@@ -202,7 +202,7 @@ export function GuestsField({
   );
 }
 
-function Stepper({
+export function Stepper({
   label,
   sublabel,
   value,

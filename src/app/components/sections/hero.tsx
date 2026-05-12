@@ -1,24 +1,11 @@
-import { useState, useEffect } from "react";
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
-import { Calendar, ChevronDown, Users, Minus, Plus } from "lucide-react";
+import { Calendar, ChevronDown, Users } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/app/components/ui/popover";
 import { Calendar as CalendarPicker } from "@/app/components/ui/calendar";
-import { Button } from "@/app/components/ui/button";
 import { format } from "date-fns";
 import { useBooking } from "@/app/context/booking-context";
-
-function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(
-    () => typeof window !== "undefined" && window.innerWidth < 768,
-  );
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 767px)");
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
-  return isMobile;
-}
+import { useIsMobile } from "@/app/components/ui/use-mobile";
+import { Stepper } from "@/app/components/ui/booking-fields";
 
 export function Hero() {
   const { guests, setGuests, dateRange, setDateRange } = useBooking();
@@ -89,7 +76,7 @@ export function Hero() {
                   </button>
                 </PopoverTrigger>
                 <PopoverContent className="w-[--radix-popover-trigger-width] md:w-64 p-4" align="start">
-                  <HeroStepper
+                  <Stepper
                     label="Adults"
                     sublabel="Ages 13+"
                     value={guests.adults}
@@ -98,7 +85,7 @@ export function Hero() {
                     onChange={(v) => setGuests({ ...guests, adults: v })}
                   />
                   <div className="my-3 h-px bg-border" />
-                  <HeroStepper
+                  <Stepper
                     label="Children"
                     sublabel="Ages 0–12"
                     value={guests.children}
@@ -146,53 +133,5 @@ export function Hero() {
         </div>
       </div>
     </section>
-  );
-}
-
-function HeroStepper({
-  label,
-  sublabel,
-  value,
-  min,
-  max,
-  onChange,
-}: {
-  label: string;
-  sublabel: string;
-  value: number;
-  min: number;
-  max: number;
-  onChange: (v: number) => void;
-}) {
-  return (
-    <div className="flex items-center justify-between">
-      <div>
-        <div>{label}</div>
-        <div className="text-xs text-muted-foreground">{sublabel}</div>
-      </div>
-      <div className="flex items-center gap-3">
-        <Button
-          type="button"
-          variant="outline"
-          size="icon"
-          className="h-8 w-8"
-          disabled={value <= min}
-          onClick={() => onChange(value - 1)}
-        >
-          <Minus className="h-4 w-4" />
-        </Button>
-        <span className="w-5 text-center tabular-nums">{value}</span>
-        <Button
-          type="button"
-          variant="outline"
-          size="icon"
-          className="h-8 w-8"
-          disabled={value >= max}
-          onClick={() => onChange(value + 1)}
-        >
-          <Plus className="h-4 w-4" />
-        </Button>
-      </div>
-    </div>
   );
 }

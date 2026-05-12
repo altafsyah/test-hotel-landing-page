@@ -42,7 +42,7 @@ function FaqItem({
         type="button"
         onClick={onToggle}
         className={cn(
-          "w-full px-5 py-5 text-base font-medium cursor-pointer flex items-center justify-between rounded-md transition-colors text-left",
+          "w-full p-5 text-base font-medium cursor-pointer flex items-center justify-between rounded-md transition-colors text-left",
           open && "rounded-b-none",
         )}
       >
@@ -78,7 +78,7 @@ export function Faq() {
 
   return (
     <section id="faq" className="bg-brand-surface">
-      <div className="container mx-auto px-4 py-20 grid grid-cols-1 md:grid-cols-2 md:gap-12 md:items-start">
+      <div className="container mx-auto px-4 py-20 grid grid-cols-1 md:grid-cols-2 md:gap-12 md:items-end">
         <div>
           <div className="flex flex-col items-center text-center md:items-start md:text-left text-brand-text-primary">
             <h2>Frequently Asked Questions</h2>
@@ -87,7 +87,7 @@ export function Faq() {
               your time with us.
             </p>
           </div>
-          <div className="w-full aspect-video md:asp relative mt-10 md:mt-8">
+          <div className="w-full aspect-video md:aspect-[2/1] relative mt-10 md:mt-8">
             <ImageWithFallback
               src="/images/image-faq.jpg"
               alt="Azure Bay Resort"
@@ -98,7 +98,7 @@ export function Faq() {
         <div className="mt-10 md:mt-0 space-y-3 md:space-y-5">
           {faqs.map((item, i) => (
             <FaqItem
-              key={i}
+              key={item.q}
               item={item}
               open={openIndex === i}
               onToggle={() => setOpenIndex(openIndex === i ? null : i)}

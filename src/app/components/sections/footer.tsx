@@ -1,32 +1,9 @@
-import { type IconName, Icon } from "@/app/components/ui/icon";
+import { Icon } from "@/app/components/ui/icon";
+import { links, socials } from "@/data/footer";
 
-const socials = [
-  { alt: "youtube", icon: "youtube" as IconName, url: "#" },
-  { alt: "whatsapp", icon: "whatsapp" as IconName, url: "#" },
-  { alt: "instagram", icon: "instagram" as IconName, url: "#" },
-  { alt: "facebook", icon: "facebook" as IconName, url: "#" },
-];
-
-const links = [
-  {
-    title: "Links",
-    items: [
-      { label: "Home", url: "/" },
-      { label: "Rooms", url: "#rooms" },
-      { label: "Amenities", url: "#amenities" },
-      { label: "Gallery", url: "#gallery" },
-    ],
-  },
-  {
-    title: "Legal",
-    items: [
-      { label: "Imprint", url: "#" },
-      { label: "Data Protection", url: "#" },
-      { label: "Privacy Settings", url: "#" },
-      { label: "Sitemap", url: "#" },
-    ],
-  },
-];
+function copyToClipboard(text: string) {
+  navigator.clipboard.writeText(text);
+}
 
 export function Footer() {
   return (
@@ -72,15 +49,21 @@ export function Footer() {
           <h5>Contact</h5>
           <div className="flex gap-3 items-center mt-5 py-3 px-4 rounded-md ring ring-white/20">
             <Icon name="phone" className="size-6" />
-            <span className="grow"> +43 123456789</span>
-            <button className="size-5 text-[#9FA4A4]">
+            <span className="grow"> +43 123456789</span>
+            <button
+              onClick={() => copyToClipboard("+43 123456789")}
+              className="size-5 text-white/40 hover:text-white transition-colors"
+            >
               <Icon name="copy" />
             </button>
           </div>
           <div className="flex gap-3 items-center mt-5 py-3 px-4 rounded-md ring ring-white/20">
             <Icon name="mail" className="size-6" />
-            <span className="grow"> info@hotel.com</span>
-            <button className="size-5 text-[#9FA4A4]">
+            <span className="grow"> info@hotel.com</span>
+            <button
+              onClick={() => copyToClipboard("info@hotel.com")}
+              className="size-5 text-white/40 hover:text-white transition-colors"
+            >
               <Icon name="copy" />
             </button>
           </div>

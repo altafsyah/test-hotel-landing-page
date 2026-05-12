@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/app/components/ui/button";
-import { Input } from "@/app/components/ui/input";
+import { IconInput } from "@/app/components/ui/input";
 import { Label } from "@/app/components/ui/label";
 import { Textarea } from "@/app/components/ui/textarea";
 import {
@@ -12,9 +12,12 @@ import {
 } from "@/app/components/ui/select";
 import { Checkbox } from "@/app/components/ui/checkbox";
 import { toast } from "sonner";
-import { User, Mail, Phone, BedDouble } from "lucide-react";
-import { DateRangeField, GuestsField, type Guests } from "@/app/components/ui/booking-fields";
-import type { DateRange } from "react-day-picker";
+import {
+  DateRangeField,
+  GuestsField,
+} from "@/app/components/ui/booking-fields";
+import { Icon } from "../ui/icon";
+import { useBooking } from "@/app/context/booking-context";
 
 const extras = [
   "Airport transfer",
@@ -23,27 +26,9 @@ const extras = [
   "Yacht excursion",
 ];
 
-const fieldClass =
-  "h-14 rounded border-brand-text-primary/10 pl-11 pr-4 py-3 bg-white";
-
-function IconInput({
-  icon,
-  ...props
-}: React.InputHTMLAttributes<HTMLInputElement> & { icon: React.ReactNode }) {
-  return (
-    <div className="relative">
-      <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
-        {icon}
-      </span>
-      <Input {...props} className={fieldClass} />
-    </div>
-  );
-}
-
 export function Reserve() {
   const [selectedExtras, setSelectedExtras] = useState<string[]>([]);
-  const [dateRange, setDateRange] = useState<DateRange | undefined>();
-  const [guests, setGuests] = useState<Guests>({ adults: 2, children: 0 });
+  const { guests, setGuests, dateRange, setDateRange } = useBooking();
 
   const toggleExtra = (extra: string) => {
     setSelectedExtras((prev) =>
@@ -67,7 +52,7 @@ export function Reserve() {
         className="absolute inset-0 h-full w-full object-cover hidden md:block"
       />
       <div className="absolute inset-0 bg-black/50 hidden md:block" />
-      <div className="relative z-10 container mx-auto md:max-w-2xl">
+      <div className="relative z-10 container mx-auto md:max-w-4xl">
         <div className="text-center flex flex-col items-center text-brand-white">
           <h3>- Plan Your Stay -</h3>
           <h2 className="mt-3">Request a Personal Quote</h2>
@@ -79,39 +64,29 @@ export function Reserve() {
 
         <form
           onSubmit={onSubmit}
-          className="space-y-8 rounded-lg border bg-white p-3 mt-10 text-brand-text-primary"
+          className="flex flex-col gap-8 rounded-lg border bg-white p-3 mt-10 text-brand-text-primary"
         >
+          {/* personal information */}
           <div>
-            <div className="mb-4 text-xs tracking-widest uppercase text-muted-foreground">
+            <div className="mb-4 text-brand-text-primary">
               Your details
             </div>
             <div className="grid gap-4 md:grid-cols-2">
+              <IconInput icon="user" placeholder="First name" required />
+              <IconInput icon="user" placeholder="Last name" required />
               <IconInput
-                icon={<User className="size-5" />}
-                placeholder="First name"
-                required
-              />
-              <IconInput
-                icon={<User className="size-5" />}
-                placeholder="Last name"
-                required
-              />
-              <IconInput
-                icon={<Mail className="size-5" />}
+                icon="mail"
                 type="email"
                 placeholder="Email address"
                 required
               />
-              <IconInput
-                icon={<Phone className="size-5" />}
-                type="tel"
-                placeholder="Phone number"
-              />
+              <IconInput icon="phone" type="tel" placeholder="Phone number" />
             </div>
           </div>
 
+          {/* reservation information */}
           <div>
-            <div className="mb-4 text-xs tracking-widest uppercase text-muted-foreground">
+            <div className="mb-4 text-brand-text-primary">
               Stay
             </div>
             <div className="grid gap-3 md:grid-cols-2">
@@ -122,28 +97,26 @@ export function Reserve() {
               <Label htmlFor="rRoom" className="sr-only">
                 Room type
               </Label>
-              <Select defaultValue="sea">
-                <SelectTrigger
-                  id="rRoom"
-                  className="h-14 w-full rounded px-4"
-                >
+              <Select>
+                <SelectTrigger id="rRoom" className="h-14! bg-[#FAFAFA] border border-brand-text-primary/10 rounded-md w-full px-4">
                   <span className="flex items-center gap-3">
-                    <BedDouble className="size-5 text-muted-foreground" />
-                    <SelectValue />
+                    <Icon name="bed" className="size-5 text-brand-text-primary!" />
+                    <SelectValue placeholder="Select room" className="text-base! placeholder:text-brand-text-primary! text-brand-text-primary!"/>
                   </span>
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="garden">Garden Suite</SelectItem>
-                  <SelectItem value="sea">Sea View Suite</SelectItem>
-                  <SelectItem value="villa">Cliffside Villa</SelectItem>
+                  <SelectItem value="garden" className="py-3">Garden Suite</SelectItem>
+                  <SelectItem value="sea" className="py-3">Sea View Suite</SelectItem>
+                  <SelectItem value="villa" className="py-3">Cliffside Villa</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
 
+          {/* extras */}
           <div>
-            <div className="mb-4 text-xs tracking-widest uppercase text-muted-foreground">
-              Optional add-ons
+            <div className="mb-4 text-brand-text-primary">
+              Your Details
             </div>
             <div className="grid gap-2 md:grid-cols-2">
               {extras.map((extra) => {
@@ -151,14 +124,15 @@ export function Reserve() {
                 return (
                   <label
                     key={extra}
-                    className={`flex cursor-pointer items-center gap-3 rounded border px-4 py-3 transition-colors ${
+                    className={`text-base !h-14 flex cursor-pointer items-center gap-3 rounded-md border px-4 py-3 transition-colors ${
                       active
-                        ? "border-foreground bg-foreground/5"
-                        : "border-border hover:bg-muted/40"
+                        ? "border-brand-accent bg-brand-accent/5"
+                        : "border-brand-text-primary/10 hover:bg-muted/40"
                     }`}
                   >
                     <Checkbox
                       checked={active}
+                      className="accent-brand-accent"
                       onCheckedChange={() => toggleExtra(extra)}
                     />
                     <span>{extra}</span>
@@ -168,21 +142,22 @@ export function Reserve() {
             </div>
           </div>
 
+          {/* special requests */}
           <div>
-            <div className="mb-4 text-xs tracking-widest uppercase text-muted-foreground">
+            <div className="mb-4 text-brand-text-primary">
               Special requests
             </div>
             <Textarea
-              rows={4}
+              rows={8}
               placeholder="Anniversary, dietary preferences, arrival time…"
-              className="rounded-2xl bg-muted/30"
+              className="text-base! rounded-md bg-[#FAFAFA] ring ring-brand-text-primary/10 placeholder:text-brand-text-primary/50 text-brand-text-primary"
             />
           </div>
 
           <Button
             type="submit"
             size="lg"
-            className="w-full rounded bg-brand-accent hover:bg-brand-accent-dark text-white uppercase tracking-widest"
+            className="w-full md:w-fit md:self-end rounded-md bg-brand-accent hover:bg-brand-accent-dark text-white uppercase tracking-widest"
           >
             Submit Request
           </Button>

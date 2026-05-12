@@ -1,10 +1,15 @@
-import { Popover, PopoverContent, PopoverTrigger } from "@/app/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/app/components/ui/popover";
 import { Calendar } from "@/app/components/ui/calendar";
 import { Button } from "@/app/components/ui/button";
 import { Calendar as CalendarIcon, Users, Minus, Plus } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/app/components/ui/utils";
 import type { DateRange } from "react-day-picker";
+import { Icon } from "./icon";
 
 type FieldShellProps = {
   label: string;
@@ -13,7 +18,12 @@ type FieldShellProps = {
   variant?: "light" | "dark";
 };
 
-export function FieldShell({ label, value, icon, variant = "light" }: FieldShellProps) {
+export function FieldShell({
+  label,
+  value,
+  icon,
+  variant = "light",
+}: FieldShellProps) {
   const base =
     variant === "dark"
       ? "border-white/15 bg-white/5 text-white hover:bg-white/10"
@@ -21,19 +31,26 @@ export function FieldShell({ label, value, icon, variant = "light" }: FieldShell
   return (
     <div
       className={cn(
-        "flex w-full items-center gap-3 rounded-full border px-4 py-2.5 transition-colors",
+        "flex w-full items-center gap-3 rounded-md border px-4 py-2.5 transition-colors h-14",
         base,
       )}
     >
-      <div className={cn("opacity-70", variant === "dark" ? "text-white" : "text-foreground")}>
+      <div
+        className={cn(
+          "opacity-70",
+          variant === "dark" ? "text-white" : "text-foreground",
+        )}
+      >
         {icon}
       </div>
-      <div className="flex flex-col items-start text-left leading-tight">
-        <span className={cn("uppercase tracking-widest", variant === "dark" ? "text-white/70" : "text-muted-foreground")} style={{ fontSize: 10 }}>
-          {label}
-        </span>
-        <span className="truncate">{value}</span>
-      </div>
+      <span
+        className={cn(
+          value ? "opacity-100" : "opacity-50",
+          "text-base text-brand-text-primary",
+        )}
+      >
+        {value ?? label}
+      </span>
     </div>
   );
 }
@@ -57,9 +74,20 @@ export function DateField({
         <button type="button" className="block w-full">
           <FieldShell
             label={label}
-            icon={<CalendarIcon className="h-4 w-4" />}
+            icon={
+              <Icon
+                name="calendar"
+                className="size-5 text-brand-text-primary"
+              />
+            }
             variant={variant}
-            value={date ? format(date, "EEE, MMM d") : <span className="opacity-60">Select date</span>}
+            value={
+              date ? (
+                format(date, "EEE, MMM d")
+              ) : (
+                <span className="opacity-60">Select date</span>
+              )
+            }
           />
         </button>
       </PopoverTrigger>
@@ -87,7 +115,7 @@ export function DateRangeField({
 }) {
   const formatRange = () => {
     if (!dateRange?.from) {
-      return <span className="opacity-60">Select dates</span>;
+      return null;
     }
     if (!dateRange.to) {
       return format(dateRange.from, "MMM d");
@@ -101,7 +129,12 @@ export function DateRangeField({
         <button type="button" className="block w-full">
           <FieldShell
             label="Arrival & Departure"
-            icon={<CalendarIcon className="h-4 w-4" />}
+            icon={
+              <Icon
+                name="calendar"
+                className="size-5 text-brand-text-primary"
+              />
+            }
             variant={variant}
             value={formatRange()}
           />
@@ -133,14 +166,14 @@ export function GuestsField({
   variant?: "light" | "dark";
 }) {
   const total = value.adults + value.children;
-  const summary = `${total} ${total === 1 ? "guest" : "guests"}`;
+  const summary = total ? `${total} ${total === 1 ? "guest" : "guests"}` : null;
   return (
     <Popover>
       <PopoverTrigger asChild>
         <button type="button" className="block w-full">
           <FieldShell
             label="Guests"
-            icon={<Users className="h-4 w-4" />}
+            icon={<Icon name="users" className="size-5" />}
             variant={variant}
             value={summary}
           />
@@ -188,14 +221,14 @@ function Stepper({
     <div className="flex items-center justify-between">
       <div>
         <div>{label}</div>
-        <div className="text-muted-foreground" style={{ fontSize: 12 }}>{sublabel}</div>
+        <div className="text-xs text-muted-foreground">{sublabel}</div>
       </div>
       <div className="flex items-center gap-3">
         <Button
           type="button"
           variant="outline"
           size="icon"
-          className="h-8 w-8 rounded-full"
+          className="h-8 w-8"
           disabled={value <= min}
           onClick={() => onChange(value - 1)}
         >
@@ -206,7 +239,7 @@ function Stepper({
           type="button"
           variant="outline"
           size="icon"
-          className="h-8 w-8 rounded-full"
+          className="h-8 w-8"
           disabled={value >= max}
           onClick={() => onChange(value + 1)}
         >

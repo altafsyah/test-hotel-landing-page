@@ -12,7 +12,7 @@ export function ImageWithFallback(
     setDidError(true);
   };
 
-  const { src, alt, style, className, ...rest } = props;
+  const { src, alt, style, className, loading = "lazy", ...rest } = props;
 
   return didError ? (
     <div
@@ -34,6 +34,7 @@ export function ImageWithFallback(
       alt={alt}
       className={className}
       style={style}
+      loading={loading}
       {...rest}
       onError={handleError}
     />

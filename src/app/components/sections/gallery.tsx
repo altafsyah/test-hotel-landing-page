@@ -1,8 +1,8 @@
 import { useState } from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { ChevronLeft, ChevronRight, Images, X } from "lucide-react";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
-import { Dialog, DialogPortal } from "./ui/dialog";
+import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
+import { Dialog, DialogPortal } from "@/app/components/ui/dialog";
 import { AnimatePresence, motion } from "motion/react";
 
 const GALLERY_IMAGES = [
@@ -114,7 +114,7 @@ export function Gallery() {
           />
           <button
             onClick={() => setOpen(true)}
-            className="absolute inset-0 bg-black/60 flex justify-center items-center text-white underline gap-3 w-full cursor-pointer"
+            className="absolute inset-0 bg-black/60 flex justify-center items-center text-white underline gap-3 w-full cursor-pointer hover:bg-black/30 transition-colors duration-150"
           >
             <Images />
             <span>See All Photos</span>

@@ -1,19 +1,19 @@
 import { useState } from "react";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Textarea } from "./ui/textarea";
+import { Button } from "@/app/components/ui/button";
+import { Input } from "@/app/components/ui/input";
+import { Label } from "@/app/components/ui/label";
+import { Textarea } from "@/app/components/ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
-import { Checkbox } from "./ui/checkbox";
+} from "@/app/components/ui/select";
+import { Checkbox } from "@/app/components/ui/checkbox";
 import { toast } from "sonner";
 import { User, Mail, Phone, BedDouble } from "lucide-react";
-import { DateRangeField, GuestsField, type Guests } from "./booking-fields";
+import { DateRangeField, GuestsField, type Guests } from "@/app/components/ui/booking-fields";
 import type { DateRange } from "react-day-picker";
 
 const extras = [

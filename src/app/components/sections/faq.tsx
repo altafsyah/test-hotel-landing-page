@@ -1,8 +1,8 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
-import { cn } from "./ui/utils";
-import { Icon } from "./ui/icon";
+import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
+import { cn } from "@/app/components/ui/utils";
+import { Icon } from "@/app/components/ui/icon";
 
 const faqs = [
   {

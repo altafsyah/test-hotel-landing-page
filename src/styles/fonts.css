@@ -34,6 +34,11 @@ h3 {
   }
 }
 
+h4 {
+  font-size: 1.75rem;
+  line-height: 150%;
+}
+
 p {
   font-size: 1rem;
   line-height: 140%;

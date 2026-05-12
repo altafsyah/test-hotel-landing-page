@@ -1,5 +1,4 @@
-import { ArrowLeft, ArrowRight } from "lucide-react";
-import { Icon } from "./ui/icon";
+import { Icon } from "@/app/components/ui/icon";
 
 interface Props {
   scrollPrev: () => void;

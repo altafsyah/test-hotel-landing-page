@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import { CardContent } from "./ui/card";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { CardContent } from "@/app/components/ui/card";
+import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
 import {
   Drawer,
   DrawerContent,
@@ -10,18 +10,18 @@ import {
   DrawerTrigger,
   DrawerFooter,
   DrawerClose,
-} from "./ui/drawer";
+} from "@/app/components/ui/drawer";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogTrigger,
   DialogClose,
-} from "./ui/dialog";
-import { ButtonNavigationSlider } from "./button-navigation-slider";
-import { Icon } from "./ui/icon";
-import { useIsMobile } from "./ui/use-mobile";
-import { type Room, rooms } from "../../data/rooms";
+} from "@/app/components/ui/dialog";
+import { ButtonNavigationSlider } from "@/app/components/ui/button-navigation-slider";
+import { Icon } from "@/app/components/ui/icon";
+import { useIsMobile } from "@/app/components/ui/use-mobile";
+import { type Room, rooms } from "@/data/rooms";
 
 export function Rooms() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ align: "start" });
@@ -111,22 +111,22 @@ const RoomTriggerCard = React.forwardRef<
         {room.price} / night
       </div>
     </div>
-    <CardContent className="flex flex-col flex-1 gap-4 p-6">
+    <CardContent className="flex flex-col flex-1 gap-4 p-3! text-brand-text-primary">
       <div className="space-y-1">
-        <h3>{room.name}</h3>
-        <p className="text-muted-foreground text-sm">{room.desc}</p>
+        <h3 className="text-xl!">{room.name}</h3>
+        <p className="opacity-70">{room.desc}</p>
       </div>
-      <div className="flex items-center gap-4 text-sm text-brand-text-secondary">
-        <div className="flex items-center gap-1.5">
-          <Icon name="users" className="size-4" />
+      <div className="flex items-center gap-4 text-sm text-brand-text-primary">
+        <div className="flex items-center gap-3">
+          <Icon name="users" className="size-6" />
           <span>{room.capacity}</span>
         </div>
-        <div className="flex items-center gap-1.5">
-          <Icon name="arrow-left-right" className="size-4" />
+        <div className="flex items-center gap-3">
+          <Icon name="arrow-left-right" className="size-6" />
           <span>{room.size}</span>
         </div>
       </div>
-      <button className="mt-auto w-full rounded-lg border border-brand-text-primary/30 text-brand-text-primary py-2.5 text-sm font-medium">
+      <button className="mt-auto w-full rounded-md border border-brand-text-primary/20 text-brand-text-primary py-2.5 text-sm font-medium">
         SEE DETAILS
       </button>
     </CardContent>
@@ -209,7 +209,12 @@ function RoomBody({ room }: { room: Room }) {
     <div className="space-y-6 relative flex-1 text-brand-text-primary">
       <div className="border-t border-b border-brand-border py-4 grid grid-cols-1 md:grid-cols-2">
         <Stat
-          icon={<Icon name="arrow-left-right" className="size-5 text-brand-accent" />}
+          icon={
+            <Icon
+              name="arrow-left-right"
+              className="size-5 text-brand-accent"
+            />
+          }
           value={room.size}
         />
         <Stat
@@ -245,7 +250,10 @@ function RoomBody({ room }: { room: Room }) {
         <div className="space-y-3">
           {room.services.map((service) => (
             <div key={service} className="flex items-center gap-2.5">
-              <Icon name="check-circle" className="shrink-0 size-4 text-brand-accent rounded-full" />
+              <Icon
+                name="check-circle"
+                className="shrink-0 size-4 text-brand-accent rounded-full"
+              />
               <span>{service}</span>
             </div>
           ))}
@@ -281,7 +289,10 @@ function RoomDetail({ room }: { room: Room }) {
         </DrawerTrigger>
         <DrawerContent className="flex flex-col data-[vaul-drawer-direction=bottom]:max-h-svh">
           <div className="flex-1 overflow-y-auto min-h-0 container mx-auto px-4 pt-2">
-            <RoomGallery room={room} className="relative aspect-[4/3] w-full rounded-lg" />
+            <RoomGallery
+              room={room}
+              className="relative aspect-[4/3] w-full rounded-lg"
+            />
             <div className="py-6 space-y-6 container mx-auto">
               <DrawerHeader className="p-0">
                 <DrawerTitle>{room.name}</DrawerTitle>
@@ -312,7 +323,9 @@ function RoomDetail({ room }: { room: Room }) {
           <RoomGallery room={room} className="w-full flex-shrink-0" />
           <div className="flex flex-col min-h-0">
             <div className="flex-1 overflow-y-auto p-8 space-y-6">
-              <DialogTitle className="text-brand-text-primary font-semibold text-xl">{room.name}</DialogTitle>
+              <DialogTitle className="text-brand-text-primary font-semibold text-xl">
+                {room.name}
+              </DialogTitle>
               <RoomBody room={room} />
             </div>
             <div className="shrink-0 flex gap-3 px-8">

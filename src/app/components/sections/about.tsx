@@ -1,12 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
 import useEmblaCarousel from "embla-carousel-react";
-import { ButtonNavigationSlider } from "./button-navigation-slider";
+import { ButtonNavigationSlider } from "@/app/components/ui/button-navigation-slider";
 
 const slides = [
-  { src: "/images/hero-1.jpg", alt: "Azure Bay Resort" },
-  { src: "/images/hero-1.jpg", alt: "Azure Bay Resort" },
-  { src: "/images/hero-1.jpg", alt: "Azure Bay Resort" },
+  { src: "/images/image-1.jpg", alt: "Azure Bay Resort" },
+  { src: "/images/image-2.jpg", alt: "Azure Bay Resort" },
+  { src: "/images/image-3.jpg", alt: "Azure Bay Resort" },
+  { src: "/images/image-4.jpg", alt: "Azure Bay Resort" },
+  { src: "/images/image-5.jpg", alt: "Azure Bay Resort" },
+  { src: "/images/image-6.jpg", alt: "Azure Bay Resort" },
 ];
 
 export function About() {

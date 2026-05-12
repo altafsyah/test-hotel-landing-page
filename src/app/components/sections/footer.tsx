@@ -1,4 +1,4 @@
-import { type IconName, Icon } from "./ui/icon";
+import { type IconName, Icon } from "@/app/components/ui/icon";
 
 const socials = [
   { alt: "youtube", icon: "youtube" as IconName, url: "#" },
@@ -34,13 +34,13 @@ export function Footer() {
       id="contact"
       className="bg-brand-text-primary text-white px-4 py-20"
     >
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16">
+      <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
         {/* brand */}
-        <div className="flex flex-col items-center text-center md:text-left md:items-start md:col-span-2 lg:col-span-1">
+        <div className="flex flex-col items-center text-center md:text-left md:items-start md:col-span-2">
           <a href="/">
-            <img src="/logo-ipsum.svg" />
+            <img src="/logo-ipsum.svg" className="h-20 w-full" />
           </a>
-          <p className="mt-6">
+          <p className="mt-6 md:mt-10">
             San Valentino, <br />
             South Tyrol, Italy.
           </p>
@@ -73,14 +73,14 @@ export function Footer() {
           <div className="flex gap-3 items-center mt-5 py-3 px-4 rounded-md ring ring-white/20">
             <Icon name="phone" className="size-6" />
             <span className="grow"> +43 123456789</span>
-            <button className="size-5">
+            <button className="size-5 text-[#9FA4A4]">
               <Icon name="copy" />
             </button>
           </div>
           <div className="flex gap-3 items-center mt-5 py-3 px-4 rounded-md ring ring-white/20">
             <Icon name="mail" className="size-6" />
             <span className="grow"> info@hotel.com</span>
-            <button className="size-5">
+            <button className="size-5 text-[#9FA4A4]">
               <Icon name="copy" />
             </button>
           </div>

@@ -1,14 +1,7 @@
-import { useState } from "react";
-import { Button } from "./ui/button";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
-import { Calendar, ChevronDown, MapPin, Users } from "lucide-react";
-import { DateRangeField, GuestsField, type Guests } from "./booking-fields";
-import type { DateRange } from "react-day-picker";
+import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
+import { Calendar, ChevronDown, Users } from "lucide-react";
 
 export function Hero() {
-  const [dateRange, setDateRange] = useState<DateRange | undefined>();
-  const [guests, setGuests] = useState<Guests>({ adults: 2, children: 0 });
-
   return (
     <section className="relative h-screen md:h-[90dvh] w-full overflow-hidden">
       <ImageWithFallback

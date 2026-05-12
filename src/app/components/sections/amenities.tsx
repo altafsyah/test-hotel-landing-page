@@ -1,12 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
-import { type IconName, Icon } from "./ui/icon";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  type CarouselApi,
-} from "./ui/carousel";
-import { ButtonNavigationSlider } from "./button-navigation-slider";
+import { useCallback, useEffect, useState } from "react";
+import useEmblaCarousel from "embla-carousel-react";
+import { type IconName, Icon } from "@/app/components/ui/icon";
+import { ButtonNavigationSlider } from "@/app/components/ui/button-navigation-slider";
 
 const items = [
   {
@@ -55,35 +50,35 @@ function AmenitiesCard({
       <div className="size-14 bg-white rounded-lg flex items-center justify-center">
         <Icon name={icon} className="text-brand-accent size-10" />
       </div>
-      <div className="mt-6">
+      <div className="mt-6 text-brand-text-primary">
         <h4>{title}</h4>
-        <p>{description}</p>
+        <p className="opacity-70 mt-3">{description}</p>
       </div>
     </div>
   );
 }
 
 export function Amenities() {
-  const [api, setApi] = useState<CarouselApi>();
+  const [emblaRef, emblaApi] = useEmblaCarousel();
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
 
   const onSelect = useCallback(() => {
-    if (!api) return;
-    setCanScrollPrev(api.canScrollPrev());
-    setCanScrollNext(api.canScrollNext());
-  }, [api]);
+    if (!emblaApi) return;
+    setCanScrollPrev(emblaApi.canScrollPrev());
+    setCanScrollNext(emblaApi.canScrollNext());
+  }, [emblaApi]);
 
   useEffect(() => {
-    if (!api) return;
+    if (!emblaApi) return;
     onSelect();
-    api.on("select", onSelect);
-    api.on("reInit", onSelect);
+    emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onSelect);
     return () => {
-      api.off("select", onSelect);
-      api.off("reInit", onSelect);
+      emblaApi.off("select", onSelect);
+      emblaApi.off("reInit", onSelect);
     };
-  }, [api, onSelect]);
+  }, [emblaApi, onSelect]);
 
   return (
     <section id="amenities" className="py-20">
@@ -92,26 +87,26 @@ export function Amenities() {
         <h2 className="mt-3">Everything you'd hope for, and more.</h2>
       </div>
       <div className="sm:hidden">
-        <Carousel className="mt-10" setApi={setApi}>
-          <CarouselContent className="-ml-4">
+        <div className="overflow-hidden mt-10" ref={emblaRef}>
+          <div className="flex -ml-4">
             {items.map((it) => (
-              <CarouselItem key={it.title} className="pl-8 pr-4 flex flex-col">
+              <div key={it.title} className="pl-8 pr-4 flex flex-col min-w-0 flex-[0_0_100%]">
                 <AmenitiesCard
                   title={it.title}
                   description={it.desc}
                   icon={it.icon as IconName}
                 />
-              </CarouselItem>
+              </div>
             ))}
-          </CarouselContent>
-        </Carousel>
+          </div>
+        </div>
         <div className="mt-6">
           <ButtonNavigationSlider
-          scrollPrev={() => api?.scrollPrev()}
-          scrollNext={() => api?.scrollNext()}
-          canScrollPrev={canScrollPrev}
-          canScrollNext={canScrollNext}
-        />
+            scrollPrev={() => emblaApi?.scrollPrev()}
+            scrollNext={() => emblaApi?.scrollNext()}
+            canScrollPrev={canScrollPrev}
+            canScrollNext={canScrollNext}
+          />
         </div>
       </div>
       <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:gap-4 md:gap-6 container mx-auto px-4 mt-10">

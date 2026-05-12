@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
 import useEmblaCarousel from "embla-carousel-react";
 import { ButtonNavigationSlider } from "@/app/components/ui/button-navigation-slider";
+import { useEmblaNavigation } from "@/app/components/ui/use-embla-navigation";
 
 const slides = [
   { src: "/images/image-1.jpg", alt: "Azure Bay Resort" },
@@ -17,32 +17,12 @@ export function About() {
     align: "center",
     startIndex: 1,
     breakpoints: {
-      "(min-width: 768px)": { align: "start" },
+      "(min-width: 768px)": { align: "end" },
     },
   });
 
-  const [canScrollPrev, setCanScrollPrev] = useState(false);
-  const [canScrollNext, setCanScrollNext] = useState(false);
-
-  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
-  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
-
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return;
-    setCanScrollPrev(emblaApi.canScrollPrev());
-    setCanScrollNext(emblaApi.canScrollNext());
-  }, [emblaApi]);
-
-  useEffect(() => {
-    if (!emblaApi) return;
-    onSelect();
-    emblaApi.on("select", onSelect);
-    emblaApi.on("reInit", onSelect);
-    return () => {
-      emblaApi.off("select", onSelect);
-      emblaApi.off("reInit", onSelect);
-    };
-  }, [emblaApi, onSelect]);
+  const { canScrollPrev, canScrollNext, scrollPrev, scrollNext } =
+    useEmblaNavigation(emblaApi);
 
   return (
     <section className="py-20" id="about">

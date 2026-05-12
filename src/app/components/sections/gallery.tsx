@@ -1,34 +1,17 @@
 import { useState } from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { ChevronLeft, ChevronRight, Images, X } from "lucide-react";
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
-import { Dialog, DialogPortal } from "@/app/components/ui/dialog";
+import {
+  Dialog,
+  DialogOverlay,
+  DialogPortal,
+} from "@/app/components/ui/dialog";
 import { AnimatePresence, motion } from "motion/react";
-
-const GALLERY_IMAGES = [
-  {
-    src: "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800",
-    alt: "Suite interior",
-    category: "Rooms",
-  },
-  {
-    src: "/images/image-6.jpg",
-    alt: "Pool view",
-    category: "Wellness",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1551776235-dde6d482980b?w=800",
-    alt: "Dining experience",
-    category: "Dining",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200",
-    alt: "Alpine panorama",
-    category: "Rooms",
-  },
-];
-
-const TABS = ["All Photos", "Rooms", "Wellness", "Dining"];
+import { GALLERY_IMAGES, TABS } from "@/data/gallery";
+import { Icon } from "../ui/icon";
+import { X } from "lucide-react";
+import { cn } from "../ui/utils";
+import { useIsMobile } from "../ui/use-mobile";
 
 const imgVariants = {
   enter: (dir: number) => ({ x: dir > 0 ? "60%" : "-60%", opacity: 0 }),
@@ -41,6 +24,8 @@ export function Gallery() {
   const [activeTab, setActiveTab] = useState("All Photos");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<1 | -1>(1);
+  const isMobile = useIsMobile();
+  const thumbsPerPage = isMobile ? 4 : 8;
 
   const filteredImages =
     activeTab === "All Photos"
@@ -51,16 +36,6 @@ export function Gallery() {
     setDirection(1);
     setActiveTab(tab);
     setCurrentIndex(0);
-  }
-
-  function handlePrev() {
-    setDirection(-1);
-    setCurrentIndex((i) => Math.max(0, i - 1));
-  }
-
-  function handleNext() {
-    setDirection(1);
-    setCurrentIndex((i) => Math.min(filteredImages.length - 1, i + 1));
   }
 
   function handleThumbnail(i: number) {
@@ -78,200 +53,225 @@ export function Gallery() {
         </p>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-10">
-        <div className="relative aspect-square md:aspect-[4/3] overflow-hidden">
+        <div className="group relative aspect-square md:aspect-[4/3] overflow-hidden">
           <ImageWithFallback
             src="/images/image-5.jpg"
             alt="Suite interior"
-            className="h-full w-full object-cover"
+            className="group-hover:scale-110 transition-transform duration-300  h-full w-full object-cover"
           />
         </div>
-        <div className="row-span-2 overflow-hidden h-auto">
+        <div className="group row-span-2 overflow-hidden h-auto">
           <ImageWithFallback
             src="/images/image-6.jpg"
             alt="Pool view"
-            className="h-full w-full object-cover"
+            className="group-hover:scale-110 transition-transform duration-300  h-full w-full object-cover"
           />
         </div>
-        <div className="hidden md:block md:aspect-[4/3] overflow-hidden">
+        <div className="group hidden md:block md:aspect-[4/3] overflow-hidden">
           <ImageWithFallback
             src="/images/image-10.jpg"
             alt="Pool view"
-            className="h-full w-full object-cover"
+            className="group-hover:scale-110 transition-transform duration-300  h-full w-full object-cover"
           />
         </div>
-        <div className="relative aspect-square md:aspect-[4/3] overflow-hidden">
+        <div className="group relative aspect-square md:aspect-[4/3] overflow-hidden">
           <ImageWithFallback
             src="/images/image-8.jpg"
             alt="Dining experience"
-            className="h-full w-full object-cover"
+            className="group-hover:scale-110 transition-transform duration-300  h-full w-full object-cover"
           />
         </div>
-        <div className="relative aspect-video col-span-2 md:col-span-1 md:row-span-2 md:aspect-auto overflow-hidden">
+        <div className="group relative hidden md:col-span-1 md:row-span-2 md:block md:overflow-hidden">
           <ImageWithFallback
-            src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200"
+            src="/images/image-9.jpg"
             alt="Alpine panorama"
-            className="h-full w-full object-cover"
+            className="group-hover:scale-110 transition-transform duration-300  h-full w-full object-cover"
           />
           <button
             onClick={() => setOpen(true)}
-            className="absolute inset-0 bg-black/60 flex justify-center items-center text-white underline gap-3 w-full cursor-pointer hover:bg-black/30 transition-colors duration-150"
+            className="absolute inset-0 bg-black/60 flex justify-center items-center text-white underline gap-3 w-full hover:bg-black/30 transition-colors duration-300"
           >
-            <Images />
+            <Icon name="images" />
             <span>See All Photos</span>
           </button>
         </div>
-        <div className="md:col-span-2 hidden md:block overflow-hidden aspect-[6/2]">
+        <div className="group relative col-span-2 aspect-video overflow-hidden md:col-span-2 md:aspect-[6/2]">
           <ImageWithFallback
-            src="/images/image-6.jpg"
+            src="/images/image-7.jpg"
             alt="Pool view"
-            className="h-full w-full object-cover"
+            className="group-hover:scale-110 transition-transform duration-300 h-full w-full object-cover"
           />
+          <button
+            onClick={() => setOpen(true)}
+            className="md:hidden absolute inset-0 bg-black/60 flex justify-center items-center text-white underline gap-3 w-full hover:bg-black/30 transition-colors duration-300"
+          >
+            <Icon name="images" />
+            <span>See All Photos</span>
+          </button>
         </div>
       </div>
-
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogPortal forceMount>
-          <AnimatePresence>
-            {open && (
-              <>
-                {/* Overlay */}
-                <motion.div
-                  key="gallery-overlay"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.25 }}
-                  className="fixed inset-0 z-50 bg-brand-text-primary/80 backdrop-blur-3xl"
-                />
-
-                {/* Content */}
-                <DialogPrimitive.Content forceMount asChild>
-                  <motion.div
-                    key="gallery-content"
-                    initial={{ opacity: 0, y: 24 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 24 }}
-                    transition={{ duration: 0.25, ease: "easeOut" }}
-                    className="fixed inset-0 z-50 flex flex-col bg-transparent focus:outline-none"
-                  >
-                    {/* header */}
-                    <div className="flex flex-col pt-4 pb-2 gap-3">
-                      <div className="flex justify-end px-4">
-                        <DialogPrimitive.Close className="text-white/70 hover:text-white transition-colors">
-                          <X size={20} />
-                          <span className="sr-only">Close</span>
-                        </DialogPrimitive.Close>
-                      </div>
-                      <div className="w-full overflow-x-auto scrollbar-none">
-                        <div className="flex flex-nowrap gap-2 px-4 w-max">
-                          {TABS.map((tab) => (
-                            <button
-                              key={tab}
-                              onClick={() => handleTabChange(tab)}
-                              className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                                activeTab === tab
-                                  ? "bg-white text-black"
-                                  : "bg-transparent text-white/70 border border-white/30 hover:text-white"
-                              }`}
-                            >
-                              {tab}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* active image */}
-                    <div className="flex-1 flex items-center justify-center overflow-hidden px-4 py-2">
-                      <AnimatePresence mode="wait" custom={direction}>
-                        {filteredImages.length > 0 ? (
-                          <motion.div
-                            key={
-                              filteredImages[currentIndex]?.src + currentIndex
-                            }
-                            custom={direction}
-                            variants={imgVariants}
-                            initial="enter"
-                            animate="center"
-                            exit="exit"
-                            transition={{ duration: 0.3, ease: "easeInOut" }}
-                            className="max-h-full max-w-full flex items-center justify-center overflow-hidden"
-                          >
-                            <ImageWithFallback
-                              src={filteredImages[currentIndex].src}
-                              alt={filteredImages[currentIndex].alt}
-                              className="max-h-full max-w-full object-contain rounded-lg"
-                            />
-                          </motion.div>
-                        ) : (
-                          <motion.p
-                            key="empty"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="text-white/50 text-sm"
-                          >
-                            No photos in this category.
-                          </motion.p>
-                        )}
-                      </AnimatePresence>
-                    </div>
-
-                    {/* thumbnails - navigation */}
-                    <div className="px-4 pb-6 flex flex-col items-center gap-3">
-                      {filteredImages.length > 0 && (
-                        <div className="flex gap-2 overflow-x-auto scrollbar-none">
-                          {filteredImages.map((img, i) => (
-                            <button
-                              key={img.src}
-                              onClick={() => handleThumbnail(i)}
-                              className={`shrink-0 w-16 h-16 rounded-md overflow-hidden border-2 transition-colors ${
-                                i === currentIndex
-                                  ? "border-white"
-                                  : "border-transparent opacity-50 hover:opacity-80"
-                              }`}
-                            >
-                              <ImageWithFallback
-                                src={img.src}
-                                alt={img.alt}
-                                className="w-full h-full object-cover"
-                              />
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                      <div className="flex items-center gap-6 text-white">
-                        <button
-                          onClick={handlePrev}
-                          disabled={currentIndex === 0}
-                          className="disabled:opacity-30 hover:opacity-70 transition-opacity"
-                        >
-                          <ChevronLeft size={20} />
-                        </button>
-                        <span className="text-sm tabular-nums">
-                          {filteredImages.length > 0
-                            ? `${currentIndex + 1} / ${filteredImages.length}`
-                            : "0 / 0"}
-                        </span>
-                        <button
-                          onClick={handleNext}
-                          disabled={
-                            currentIndex === filteredImages.length - 1 ||
-                            filteredImages.length === 0
-                          }
-                          className="disabled:opacity-30 hover:opacity-70 transition-opacity"
-                        >
-                          <ChevronRight size={20} />
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                </DialogPrimitive.Content>
-              </>
-            )}
-          </AnimatePresence>
-        </DialogPortal>
-      </Dialog>
+      <GalleryDialog
+        open={open}
+        onOpenChange={setOpen}
+        activeTab={activeTab}
+        onTabChange={handleTabChange}
+        filteredImages={filteredImages}
+        currentIndex={currentIndex}
+        direction={direction}
+        thumbsPerPage={thumbsPerPage}
+        onThumbnail={handleThumbnail}
+      />
     </section>
+  );
+}
+
+type GalleryImage = { src: string; alt: string; category: string };
+
+type GalleryDialogProps = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  activeTab: string;
+  onTabChange: (tab: string) => void;
+  filteredImages: GalleryImage[];
+  currentIndex: number;
+  direction: 1 | -1;
+  thumbsPerPage: number;
+  onThumbnail: (i: number) => void;
+};
+
+function GalleryDialog({
+  open,
+  onOpenChange,
+  activeTab,
+  onTabChange,
+  filteredImages,
+  currentIndex,
+  direction,
+  thumbsPerPage,
+  onThumbnail,
+}: GalleryDialogProps) {
+  const totalPages = Math.ceil(filteredImages.length / thumbsPerPage);
+  const thumbPage = Math.floor(currentIndex / thumbsPerPage);
+  const start = thumbPage * thumbsPerPage;
+  const visibleThumbs = filteredImages.slice(start, start + thumbsPerPage);
+
+  function handleThumbPrev() {
+    const prevPage = Math.max(0, thumbPage - 1);
+    onThumbnail(prevPage * thumbsPerPage);
+  }
+
+  function handleThumbNext() {
+    const nextPage = Math.min(totalPages - 1, thumbPage + 1);
+    onThumbnail(nextPage * thumbsPerPage);
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogPortal>
+        <DialogOverlay className="bg-black/70 backdrop-blur-sm" />
+        <DialogPrimitive.Content
+          className={cn(
+            "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+            "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-3xl duration-200 outline-none",
+          )}
+        >
+          <DialogPrimitive.Title className="sr-only">
+            Photo Gallery
+          </DialogPrimitive.Title>
+
+          {/* tabs */}
+          <div className="flex gap-2 mb-4 overflow-x-auto no-scrollbar py-1 px-4">
+            {TABS.map((tab) => (
+              <button
+                key={tab}
+                onClick={() => onTabChange(tab)}
+                className={cn(
+                  "shrink-0 px-5 py-3 rounded-lg text-sm font-medium transition-colors text-nowrap",
+                  activeTab === tab
+                    ? "bg-white text-brand-text-primary"
+                    : "text-white ring ring-white",
+                )}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+
+          <div className="px-4">
+            {/* active image */}
+            <div className="relative w-full aspect-[4/3] overflow-hidden">
+              <AnimatePresence custom={direction} mode="popLayout">
+                <motion.div
+                  key={currentIndex + "-" + activeTab}
+                  custom={direction}
+                  variants={imgVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  className="absolute inset-0"
+                >
+                  <ImageWithFallback
+                    src={filteredImages[currentIndex]?.src ?? ""}
+                    alt={filteredImages[currentIndex]?.alt ?? ""}
+                    className="w-full h-full object-cover"
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* thumbnails */}
+            <div className="grid grid-cols-4 md:grid-cols-8 gap-2 mt-3">
+              {visibleThumbs.map((img, i) => {
+                const actualIndex = start + i;
+                return (
+                  <button
+                    key={actualIndex}
+                    onClick={() => onThumbnail(actualIndex)}
+                    className={cn(
+                      "aspect-square overflow-hidden transition-all w-full",
+                      actualIndex === currentIndex
+                        ? "ring-2 ring-brand-accent opacity-100"
+                        : "opacity-50 hover:opacity-80",
+                    )}
+                  >
+                    <ImageWithFallback
+                      src={img.src}
+                      alt={img.alt}
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* navigation */}
+            <div className="flex items-center justify-center gap-3 mt-3">
+              <button
+                onClick={handleThumbPrev}
+                disabled={thumbPage === 0}
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white disabled:opacity-30 transition-colors"
+              >
+                <Icon name="arrow-left" size={16} />
+              </button>
+              <span className="text-white text-sm tabular-nums">
+                {thumbPage + 1}/{totalPages}
+              </span>
+              <button
+                onClick={handleThumbNext}
+                disabled={thumbPage === totalPages - 1}
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white disabled:opacity-30 transition-colors"
+              >
+                <Icon name="arrow-right" size={16} />
+              </button>
+            </div>
+          </div>
+        </DialogPrimitive.Content>
+
+        <DialogPrimitive.Close className="fixed top-4 right-4 z-50 text-white/60 hover:text-white transition-colors">
+          <X size={20} />
+        </DialogPrimitive.Close>
+      </DialogPortal>
+    </Dialog>
   );
 }

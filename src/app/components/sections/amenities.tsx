@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { type IconName, Icon } from "@/app/components/ui/icon";
 import { ButtonNavigationSlider } from "@/app/components/ui/button-navigation-slider";
+import { useEmblaNavigation } from "@/app/components/ui/use-embla-navigation";
 
-const items = [
+const items: Array<{ icon: IconName; title: string; desc: string }> = [
   {
     icon: "swimming-pool",
     title: "Sky Infinity Pool",
@@ -60,25 +60,8 @@ function AmenitiesCard({
 
 export function Amenities() {
   const [emblaRef, emblaApi] = useEmblaCarousel();
-  const [canScrollPrev, setCanScrollPrev] = useState(false);
-  const [canScrollNext, setCanScrollNext] = useState(false);
-
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return;
-    setCanScrollPrev(emblaApi.canScrollPrev());
-    setCanScrollNext(emblaApi.canScrollNext());
-  }, [emblaApi]);
-
-  useEffect(() => {
-    if (!emblaApi) return;
-    onSelect();
-    emblaApi.on("select", onSelect);
-    emblaApi.on("reInit", onSelect);
-    return () => {
-      emblaApi.off("select", onSelect);
-      emblaApi.off("reInit", onSelect);
-    };
-  }, [emblaApi, onSelect]);
+  const { canScrollPrev, canScrollNext, scrollPrev, scrollNext } =
+    useEmblaNavigation(emblaApi);
 
   return (
     <section id="amenities" className="py-20">
@@ -94,7 +77,7 @@ export function Amenities() {
                 <AmenitiesCard
                   title={it.title}
                   description={it.desc}
-                  icon={it.icon as IconName}
+                  icon={it.icon}
                 />
               </div>
             ))}
@@ -102,8 +85,8 @@ export function Amenities() {
         </div>
         <div className="mt-6">
           <ButtonNavigationSlider
-            scrollPrev={() => emblaApi?.scrollPrev()}
-            scrollNext={() => emblaApi?.scrollNext()}
+            scrollPrev={scrollPrev}
+            scrollNext={scrollNext}
             canScrollPrev={canScrollPrev}
             canScrollNext={canScrollNext}
           />
@@ -115,7 +98,7 @@ export function Amenities() {
             key={it.title}
             title={it.title}
             description={it.desc}
-            icon={it.icon as IconName}
+            icon={it.icon}
           />
         ))}
       </div>

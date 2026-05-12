@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { type HTMLAttributes, forwardRef, useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
+import { useEmblaNavigation } from "@/app/components/ui/use-embla-navigation";
 import { CardContent } from "@/app/components/ui/card";
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
 import {
@@ -19,31 +20,14 @@ import {
   DialogClose,
 } from "@/app/components/ui/dialog";
 import { ButtonNavigationSlider } from "@/app/components/ui/button-navigation-slider";
-import { Icon } from "@/app/components/ui/icon";
+import { type IconName, Icon } from "@/app/components/ui/icon";
 import { useIsMobile } from "@/app/components/ui/use-mobile";
 import { type Room, rooms } from "@/data/rooms";
 
 export function Rooms() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ align: "start" });
-  const [canScrollPrev, setCanScrollPrev] = useState(false);
-  const [canScrollNext, setCanScrollNext] = useState(false);
-
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return;
-    setCanScrollPrev(emblaApi.canScrollPrev());
-    setCanScrollNext(emblaApi.canScrollNext());
-  }, [emblaApi]);
-
-  useEffect(() => {
-    if (!emblaApi) return;
-    onSelect();
-    emblaApi.on("select", onSelect);
-    emblaApi.on("reInit", onSelect);
-    return () => {
-      emblaApi.off("select", onSelect);
-      emblaApi.off("reInit", onSelect);
-    };
-  }, [emblaApi, onSelect]);
+  const { canScrollPrev, canScrollNext, scrollPrev, scrollNext } =
+    useEmblaNavigation(emblaApi);
 
   return (
     <section id="rooms" className="bg-brand-surface py-20">
@@ -71,8 +55,8 @@ export function Rooms() {
         </div>
         <div className="mt-6">
           <ButtonNavigationSlider
-            scrollPrev={() => emblaApi?.scrollPrev()}
-            scrollNext={() => emblaApi?.scrollNext()}
+            scrollPrev={scrollPrev}
+            scrollNext={scrollNext}
             canScrollPrev={canScrollPrev}
             canScrollNext={canScrollNext}
           />
@@ -82,19 +66,23 @@ export function Rooms() {
   );
 }
 
+const FEATURE_ICONS: Record<string, IconName> = {
+  bathtub: "bathtub",
+  wifi: "wifi",
+  "mini bar": "wine",
+};
+
 function featureIcon(feature: string) {
-  const f = feature.toLowerCase();
-  if (f.includes("bathtub"))
-    return <Icon name="bathtub" className="size-6 text-brand-accent" />;
-  if (f.includes("wifi"))
-    return <Icon name="wifi" className="size-6 text-brand-accent" />;
-  if (f.includes("bar"))
-    return <Icon name="wine" className="size-6 text-brand-accent" />;
+  const key = Object.keys(FEATURE_ICONS).find((k) =>
+    feature.toLowerCase().includes(k),
+  );
+  if (!key) return null;
+  return <Icon name={FEATURE_ICONS[key]} className="size-6 text-brand-accent" />;
 }
 
-const RoomTriggerCard = React.forwardRef<
+const RoomTriggerCard = forwardRef<
   HTMLDivElement,
-  { room: Room } & React.HTMLAttributes<HTMLDivElement>
+  { room: Room } & HTMLAttributes<HTMLDivElement>
 >(({ room, ...props }, ref) => (
   <div
     ref={ref}
@@ -107,7 +95,7 @@ const RoomTriggerCard = React.forwardRef<
         alt={room.name}
         className="w-full aspect-[4/3] object-cover"
       />
-      <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-brand-text-primary text-sm font-medium px-3 py-1 rounded-full">
+      <div className="absolute top-3 right-3 bg-white backdrop-blur-sm text-brand-text-primary p-2.5 rounded-lg">
         {room.price} / night
       </div>
     </div>
@@ -137,26 +125,18 @@ RoomTriggerCard.displayName = "RoomTriggerCard";
 function RoomGallery({ room, className }: { room: Room; className?: string }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [canScrollPrev, setCanScrollPrev] = useState(false);
-  const [canScrollNext, setCanScrollNext] = useState(false);
-
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return;
-    setCurrentSlide(emblaApi.selectedScrollSnap());
-    setCanScrollPrev(emblaApi.canScrollPrev());
-    setCanScrollNext(emblaApi.canScrollNext());
-  }, [emblaApi]);
+  const { canScrollPrev, canScrollNext } = useEmblaNavigation(emblaApi);
 
   useEffect(() => {
     if (!emblaApi) return;
-    onSelect();
+    const onSelect = () => setCurrentSlide(emblaApi.selectedScrollSnap());
     emblaApi.on("select", onSelect);
     emblaApi.on("reInit", onSelect);
     return () => {
       emblaApi.off("select", onSelect);
       emblaApi.off("reInit", onSelect);
     };
-  }, [emblaApi, onSelect]);
+  }, [emblaApi]);
 
   return (
     <div className={`rounded-lg relative overflow-hidden ${className ?? ""}`}>
@@ -283,12 +263,12 @@ function RoomDetail({ room }: { room: Room }) {
 
   if (isMobile) {
     return (
-      <Drawer snapPoints={[0.85, 1]}>
+      <Drawer snapPoints={[0.85, 1]} fadeFromIndex={0}>
         <DrawerTrigger asChild>
           <RoomTriggerCard room={room} />
         </DrawerTrigger>
-        <DrawerContent className="flex flex-col data-[vaul-drawer-direction=bottom]:max-h-svh">
-          <div className="flex-1 overflow-y-auto min-h-0 container mx-auto px-4 pt-2">
+        <DrawerContent className="flex flex-col h-full">
+          <div className="flex-1 overflow-y-auto min-h-0 container mx-auto px-4 pt-2" data-vaul-no-drag>
             <RoomGallery
               room={room}
               className="relative aspect-[4/3] w-full rounded-lg"

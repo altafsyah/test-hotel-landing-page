@@ -18,14 +18,14 @@ export function ButtonNavigationSlider({
       <button
         onClick={scrollPrev}
         disabled={!canScrollPrev}
-        className="size-11 rounded-lg flex items-center justify-center bg-brand-accent transition-colors text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:text-[#323232]"
+        className="size-11 rounded-lg flex items-center justify-center bg-brand-accent transition-colors text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:text-brand-text-primary"
       >
         <Icon name="arrow-left" className="size-5" />
       </button>
       <button
         onClick={scrollNext}
         disabled={!canScrollNext}
-        className="size-11 rounded-lg flex items-center justify-center bg-brand-accent transition-colors text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:text-[#323232]"
+        className="size-11 rounded-lg flex items-center justify-center bg-brand-accent transition-colors text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:text-brand-text-primary"
       >
         <Icon name="arrow-right" className="size-5" />
       </button>

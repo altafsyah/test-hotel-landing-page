@@ -75,10 +75,7 @@ export function Reserve() {
           className="space-y-8 rounded-lg border bg-white p-3 mt-10 text-brand-text-primary"
         >
           <div>
-            <div
-              className="mb-4 tracking-widest uppercase text-muted-foreground"
-              style={{ fontSize: 11 }}
-            >
+            <div className="mb-4 text-xs tracking-widest uppercase text-muted-foreground">
               Your details
             </div>
             <div className="grid gap-4 md:grid-cols-2">
@@ -107,10 +104,7 @@ export function Reserve() {
           </div>
 
           <div>
-            <div
-              className="mb-4 tracking-widest uppercase text-muted-foreground"
-              style={{ fontSize: 11 }}
-            >
+            <div className="mb-4 text-xs tracking-widest uppercase text-muted-foreground">
               Stay
             </div>
             <div className="grid gap-3 md:grid-cols-2">
@@ -124,7 +118,7 @@ export function Reserve() {
               <Select defaultValue="sea">
                 <SelectTrigger
                   id="rRoom"
-                  className="h-12 w-full rounded px-4"
+                  className="h-14 w-full rounded px-4"
                 >
                   <span className="flex items-center gap-3">
                     <BedDouble className="size-5 text-muted-foreground" />
@@ -141,13 +135,10 @@ export function Reserve() {
           </div>
 
           <div>
-            <div
-              className="mb-4 tracking-widest uppercase text-muted-foreground"
-              style={{ fontSize: 11 }}
-            >
+            <div className="mb-4 text-xs tracking-widest uppercase text-muted-foreground">
               Optional add-ons
             </div>
-            <div className="grid gap-2 sm:grid-cols-2">
+            <div className="grid gap-2 md:grid-cols-2">
               {extras.map((extra) => {
                 const active = selectedExtras.includes(extra);
                 return (
@@ -171,10 +162,7 @@ export function Reserve() {
           </div>
 
           <div>
-            <div
-              className="mb-4 tracking-widest uppercase text-muted-foreground"
-              style={{ fontSize: 11 }}
-            >
+            <div className="mb-4 text-xs tracking-widest uppercase text-muted-foreground">
               Special requests
             </div>
             <Textarea
@@ -187,9 +175,9 @@ export function Reserve() {
           <Button
             type="submit"
             size="lg"
-            className="w-full rounded md:w-auto md:px-10"
+            className="w-full rounded bg-brand-accent hover:bg-brand-accent-dark text-white uppercase tracking-widest"
           >
-            Submit request
+            Submit Request
           </Button>
         </form>
       </div>

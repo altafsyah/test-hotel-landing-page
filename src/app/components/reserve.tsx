@@ -59,8 +59,15 @@ export function Reserve() {
   };
 
   return (
-    <section id="reserve" className="py-20 px-4">
-      <div className="mx-auto container">
+    <section id="reserve" className="relative py-20 px-4 overflow-hidden">
+      <img
+        src="/images/hero-1.jpg"
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 h-full w-full object-cover hidden md:block"
+      />
+      <div className="absolute inset-0 bg-black/50 hidden md:block" />
+      <div className="relative z-10 container mx-auto md:max-w-2xl">
         <div className="text-center flex flex-col items-center text-brand-white">
           <h3>- Plan Your Stay -</h3>
           <h2 className="mt-3">Request a Personal Quote</h2>

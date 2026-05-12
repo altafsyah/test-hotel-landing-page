@@ -1,8 +1,8 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { cn } from "./ui/utils";
+import { Icon } from "./ui/icon";
 
 const faqs = [
   {
@@ -37,22 +37,24 @@ function FaqItem({
   onToggle: () => void;
 }) {
   return (
-    <details open name="faq" className="bg-white rounded-xl">
-      <summary
-        onClick={(e) => { e.preventDefault(); onToggle(); }}
+    <div className="bg-white rounded-md text-brand-text-primary">
+      <button
+        type="button"
+        onClick={onToggle}
         className={cn(
-          "px-5 py-5 text-base font-medium cursor-pointer list-none flex items-center justify-between hover:bg-muted/40 rounded-xl transition-colors",
-          open && "rounded-b-none"
+          "w-full px-5 py-5 text-base font-medium cursor-pointer flex items-center justify-between rounded-md transition-colors text-left",
+          open && "rounded-b-none",
         )}
       >
         {item.q}
-        <ChevronDown
+        <Icon
+          name="chevron-down"
           className={cn(
-            "size-5 shrink-0 transition-transform duration-300",
-            open && "rotate-180"
+            "size-7 shrink-0 transition-transform duration-300 text-brand-accent",
+            open && "rotate-180",
           )}
         />
-      </summary>
+      </button>
       <AnimatePresence initial={false}>
         {open && (
           <motion.div
@@ -63,35 +65,37 @@ function FaqItem({
             transition={{ duration: 0.3, ease: "easeInOut" }}
             style={{ overflow: "hidden" }}
           >
-            <p className="px-5 pb-5 text-muted-foreground">{item.a}</p>
+            <p className="px-5 pb-5 opacity-80">{item.a}</p>
           </motion.div>
         )}
       </AnimatePresence>
-    </details>
+    </div>
   );
 }
 
 export function Faq() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
     <section id="faq" className="bg-brand-surface">
-      <div className="container mx-auto px-4 py-20 grid grid-cols-1">
-        <div className="flex flex-col items-center text-center">
-          <h2 className="mt-3">Frequently Asked Questions</h2>
-          <p className="mt-6">
-            Answers to the most common questions, so you can focus on enjoying
-            your time with us.
-          </p>
+      <div className="container mx-auto px-4 py-20 grid grid-cols-1 md:grid-cols-2 md:gap-12 md:items-start">
+        <div>
+          <div className="flex flex-col items-center text-center md:items-start md:text-left text-brand-text-primary">
+            <h2>Frequently Asked Questions</h2>
+            <p className="mt-6 md:mt-4 opacity-80">
+              Answers to the most common questions, so you can focus on enjoying
+              your time with us.
+            </p>
+          </div>
+          <div className="w-full aspect-video md:asp relative mt-10 md:mt-8">
+            <ImageWithFallback
+              src="/images/image-faq.jpg"
+              alt="Azure Bay Resort"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          </div>
         </div>
-        <div className="w-full aspect-video relative mt-10">
-          <ImageWithFallback
-            src="/images/hero-1.jpg"
-            alt="Azure Bay Resort"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-        </div>
-        <div className="mt-10 space-y-3">
+        <div className="mt-10 md:mt-0 space-y-3 md:space-y-5">
           {faqs.map((item, i) => (
             <FaqItem
               key={i}

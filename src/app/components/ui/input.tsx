@@ -3,9 +3,10 @@ import * as React from "react";
 import { cn } from "./utils";
 import { Icon, IconName } from "./icon";
 
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
-  return (
+const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
+  ({ className, type, ...props }, ref) => (
     <input
+      ref={ref}
       type={type}
       data-slot="input"
       className={cn(
@@ -16,24 +17,25 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
       )}
       {...props}
     />
-  );
-}
+  ),
+);
+Input.displayName = "Input";
 
-function IconInput({
-  icon,
-  ...props
-}: React.InputHTMLAttributes<HTMLInputElement> & { icon: IconName }) {
-  return (
-    <div className="relative">
-      <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
-        <Icon name={icon} className="size-6 text-brand-text-primary"/>
-      </span>
-      <Input
-        {...props}
-        className="hover:bg-muted/40 text-brand-text-primary h-14 rounded-md border-brand-text-primary/10 pl-12 pr-4 py-3 bg-white text-base! placeholder:text-base "
-      />
-    </div>
-  );
-}
+const IconInput = React.forwardRef<
+  HTMLInputElement,
+  React.InputHTMLAttributes<HTMLInputElement> & { icon: IconName }
+>(({ icon, ...props }, ref) => (
+  <div className="relative">
+    <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
+      <Icon name={icon} className="size-6 text-brand-text-primary" />
+    </span>
+    <Input
+      ref={ref}
+      {...props}
+      className="hover:bg-muted/40 text-brand-text-primary h-14 rounded-md border-brand-text-primary/10 pl-12 pr-4 py-3 bg-white text-base! placeholder:text-base "
+    />
+  </div>
+));
+IconInput.displayName = "IconInput";
 
 export { Input, IconInput };

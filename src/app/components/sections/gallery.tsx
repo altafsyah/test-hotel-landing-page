@@ -44,7 +44,7 @@ export function Gallery() {
   }
 
   return (
-    <section id="gallery" className="container mx-auto px-4 py-20">
+    <section id="gallery" className="px-4 md:px-10 py-20">
       <div className="flex flex-col items-center text-center md:text-left md:items-start">
         <h3>- Visual Memories -</h3>
         <h2 className="mt-3">A Glimpse of Paradise</h2>
@@ -246,11 +246,11 @@ function GalleryDialog({
             </div>
 
             {/* navigation */}
-            <div className="flex items-center justify-center gap-3 mt-3">
+            <div className="flex items-center justify-center gap-10 mt-4 md:mt-8">
               <button
                 onClick={handleThumbPrev}
                 disabled={thumbPage === 0}
-                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white disabled:opacity-30 transition-colors"
+                className="size-11 rounded-md bg-white hover:bg-white/20 flex items-center justify-center text-brand-text-primary disabled:opacity-50 transition-colors"
               >
                 <Icon name="arrow-left" size={16} />
               </button>
@@ -260,7 +260,7 @@ function GalleryDialog({
               <button
                 onClick={handleThumbNext}
                 disabled={thumbPage === totalPages - 1}
-                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white disabled:opacity-30 transition-colors"
+                className="size-11 rounded-md bg-white hover:bg-white/20 flex items-center justify-center text-brand-text-primary disabled:opacity-50 transition-colors"
               >
                 <Icon name="arrow-right" size={16} />
               </button>

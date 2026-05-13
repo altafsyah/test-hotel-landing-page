@@ -65,7 +65,7 @@ export function Amenities() {
 
   return (
     <section id="amenities" className="py-20">
-      <div className="mx-auto container px-4 flex flex-col items-center text-center">
+      <div className="px-4 md:px-10 flex flex-col items-center text-center">
         <h3>- Amenities -</h3>
         <h2 className="mt-3">Everything you'd hope for, and more.</h2>
       </div>
@@ -73,7 +73,10 @@ export function Amenities() {
         <div className="overflow-hidden mt-10" ref={emblaRef}>
           <div className="flex -ml-4">
             {items.map((it) => (
-              <div key={it.title} className="pl-8 pr-4 flex flex-col min-w-0 flex-[0_0_100%]">
+              <div
+                key={it.title}
+                className="pl-8 pr-4 flex flex-col min-w-0 flex-[0_0_100%]"
+              >
                 <AmenitiesCard
                   title={it.title}
                   description={it.desc}
@@ -92,7 +95,7 @@ export function Amenities() {
           />
         </div>
       </div>
-      <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:gap-4 md:gap-6 container mx-auto px-4 mt-10">
+      <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:gap-4 md:gap-6 px-4 md:px-10 mt-10">
         {items.map((it) => (
           <AmenitiesCard
             key={it.title}

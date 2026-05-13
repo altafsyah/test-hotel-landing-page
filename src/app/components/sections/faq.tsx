@@ -74,11 +74,19 @@ function FaqItem({
 }
 
 export function Faq() {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [openIndexes, setOpenIndexes] = useState<Set<number>>(new Set([0]));
+
+  function toggleIndex(i: number) {
+    setOpenIndexes((prev) => {
+      const next = new Set(prev);
+      next.has(i) ? next.delete(i) : next.add(i);
+      return next;
+    });
+  }
 
   return (
     <section id="faq" className="bg-brand-surface">
-      <div className="container mx-auto px-4 py-20 grid grid-cols-1 md:grid-cols-2 md:gap-12 md:items-end">
+      <div className="px-4 md:px-10 py-20 grid grid-cols-1 md:grid-cols-2 md:gap-12 md:items-start">
         <div>
           <div className="flex flex-col items-center text-center md:items-start md:text-left text-brand-text-primary">
             <h2>Frequently Asked Questions</h2>
@@ -100,8 +108,8 @@ export function Faq() {
             <FaqItem
               key={item.q}
               item={item}
-              open={openIndex === i}
-              onToggle={() => setOpenIndex(openIndex === i ? null : i)}
+              open={openIndexes.has(i)}
+              onToggle={() => toggleIndex(i)}
             />
           ))}
         </div>

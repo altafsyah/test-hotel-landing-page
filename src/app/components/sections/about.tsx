@@ -26,10 +26,10 @@ export function About() {
 
   return (
     <section className="py-20" id="about">
-      <div className="px-4 container mx-auto text-center flex flex-col items-center text-brand-text-primary md:text-left md:items-start">
+      <div className="px-4 md:px-10 text-center flex flex-col items-center text-brand-text-primary md:text-left md:items-start">
         <h3>- Our Heritage -</h3>
         <h2 className="mt-3">Nature, Design, and Soul</h2>
-        <div className="md:flex md:gap-32 w-full mt-6 md:mt-3 items-start">
+        <div className="md:flex md:gap-32 w-full mt-6 md:mt-3 items-start justify-between">
           <p className="">
             Born from a passion for architecture and deep respect for the Alpine
             landscape, L'Aura is more than a hotel—it's a private retreat where
@@ -50,7 +50,10 @@ export function About() {
           <div ref={emblaRef} className="overflow-visible">
             <div className="flex">
               {slides.map((slide, i) => (
-                <div key={i} className="flex-none basis-[85%] md:basis-[45%] px-3">
+                <div
+                  key={i}
+                  className="flex-none basis-[85%] md:basis-[45%] px-3"
+                >
                   <div className="w-full aspect-square md:aspect-[3/2] bg-slate-300 relative overflow-hidden">
                     <ImageWithFallback
                       src={slide.src}

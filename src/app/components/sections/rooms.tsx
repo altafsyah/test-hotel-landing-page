@@ -32,7 +32,7 @@ export function Rooms() {
   return (
     <section id="rooms" className="bg-brand-surface py-20">
       <div className="">
-        <div className="px-4 container mx-auto flex flex-col items-center text-center text-brand-text-primary">
+        <div className="px-4 md:px-10 flex flex-col items-center text-center text-brand-text-primary">
           <h3>- Your Private Sanctuary -</h3>
           <h2 className="mt-3">Designed for Deep Rest</h2>
           <p className="mt-6">
@@ -77,7 +77,9 @@ function featureIcon(feature: string) {
     feature.toLowerCase().includes(k),
   );
   if (!key) return null;
-  return <Icon name={FEATURE_ICONS[key]} className="size-6 text-brand-accent" />;
+  return (
+    <Icon name={FEATURE_ICONS[key]} className="size-6 text-brand-accent" />
+  );
 }
 
 const RoomTriggerCard = forwardRef<
@@ -269,12 +271,15 @@ function RoomDetail({ room }: { room: Room }) {
         </DrawerTrigger>
         <DrawerContent className="flex flex-col max-h-none">
           <div className="h-8 w-full shrink-0" />
-          <div className="flex-1 overflow-y-auto min-h-0 container mx-auto px-4" data-vaul-no-drag>
+          <div
+            className="flex-1 overflow-y-auto min-h-0 px-4"
+            data-vaul-no-drag
+          >
             <RoomGallery
               room={room}
               className="relative aspect-[4/3] w-full rounded-lg"
             />
-            <div className="py-6 space-y-6 container mx-auto">
+            <div className="py-6 space-y-6">
               <DrawerHeader className="p-0">
                 <DrawerTitle>{room.name}</DrawerTitle>
               </DrawerHeader>

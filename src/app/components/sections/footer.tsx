@@ -11,7 +11,7 @@ export function Footer() {
       id="contact"
       className="bg-brand-text-primary text-white px-4 py-20"
     >
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
+      <div className="px-4 md:px-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
         {/* brand */}
         <div className="flex flex-col items-center text-center md:text-left md:items-start md:col-span-2">
           <a href="/">
@@ -82,7 +82,7 @@ export function Footer() {
           </ul>
         </div>
       </div>
-      <div className="container mx-auto border-t border-t-white/10 mt-16 pt-5 md:flex items-center justify-between gap-6">
+      <div className="px-4 md:px-10 border-t border-t-white/10 mt-16 pt-5 md:flex items-center justify-between gap-6">
         <h6>© 2026 Hotel Ipsum</h6>
         <div className="mt-5 md:mt-0">
           <p>Design and Code by</p>
